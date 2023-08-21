@@ -11,13 +11,14 @@ from users.models import Subscription, User
 
 class Base64ImageField(serializers.ImageField):
     """Кодирование/декодирование изображения в/из формата Base64."""
+
     def to_internal_value(self, data):
         if isinstance(data, str) and data.startswith('data:image'):
             format_type, image_string = data.split(';base64,')
             ext = format_type.split('/')[-1]
             data = ContentFile(
                 base64.b64decode(image_string), name='temp.' + ext
-                )
+            )
 
         return super().to_internal_value(data)
 
