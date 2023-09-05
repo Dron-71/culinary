@@ -1,14 +1,20 @@
 from django.contrib import admin
-from .models import User
+
+from .models import Subscription, User
 
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    """Отображение в админ зоне пользователя."""
     list_display = ('id', 'username', 'email', 'first_name', 'last_name')
     search_fields = ('email', 'username', 'first_name', 'last_name')
     list_editable = ('username', 'email', 'first_name', 'last_name')
-    list_filter = ('email', 'username')
+    empty_value_display = ('--пусто--')
 
 
-admin.site.unregister(User)
-admin.site.register(User, UserAdmin)
+@admin.register(Subscription)
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'author')
+    search_fields = ('user', 'author')
+    list_filter = ('user', 'author')
+    empty_value_display = ('--пусто--')

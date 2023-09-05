@@ -1,9 +1,10 @@
+from django_filters.rest_framework import FilterSet
 from django.db import models
-from django_filters import CharFilter, rest_framework
-from recipes.models import Ingredient, Recipe
+from django_filters import CharFilter, ModelMultipleChoiceFilter, BooleanFilter
+from recipes.models import Recipes, Ingredient, Tag
 
 
-class IngredientFilter(rest_framework.FilterSet):
+class IngredientFilter(FilterSet):
     """Фильтр ингредиентов."""
     name = CharFilter(method='filtering_by_name')
 
@@ -24,27 +25,28 @@ class IngredientFilter(rest_framework.FilterSet):
 
     class Meta:
         model = Ingredient
-        fields = ('name',)
+        fields = ('name', )
 
 
-class RecipeFilter(rest_framework.FilterSet):
-    """Фильтр рецептов."""
-    tags = rest_framework.AllValuesMultipleFilter(field_name='tags__slug')
-    is_favorited = rest_framework.BooleanFilter(method='get_is_favorited')
-    is_in_shopping_cart = rest_framework.BooleanFilter(
-        method='get_is_in_shopping_cart',
+class RecipeFilter(FilterSet):
+    tags = ModelMultipleChoiceFilter(
+        queryset=Tag.objects.all(),
+        field_name='tags__slug',
+        to_field_name='slug',
     )
+    is_favorited = BooleanFilter(method='get_is_favorited')
+    is_in_shopping_cart = BooleanFilter(method='get_is_in_shopping_cart')
+
+    class Meta:
+        model = Recipes
+        fields = ('author', 'tags', 'is_favorited', 'is_in_shopping_cart')
 
     def get_is_favorited(self, queryset, name, value):
-        if value:
-            return queryset.filter(favorites__user=self.request.user)
+        if self.request.user.is_authenticated and value:
+            return queryset.filter(favorite__user=self.request.user)
         return queryset
 
     def get_is_in_shopping_cart(self, queryset, name, value):
-        if value:
-            return queryset.filter(shopping_cart__user=self.request.user)
+        if self.request.user.is_authenticated and value:
+            return queryset.filter(carts__user=self.request.user)
         return queryset
-
-    class Meta:
-        model = Recipe
-        fields = ('author', 'tags', 'is_favorited', 'is_in_shopping_cart')
