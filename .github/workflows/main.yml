@@ -7,7 +7,6 @@ on:
 
 jobs:
   tests:
-    # Разворачиваем окружение:
     runs-on: ubuntu-latest
 
     steps:
