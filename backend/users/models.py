@@ -5,15 +5,14 @@ from django.db import models
 class User(AbstractUser):
     """Модель пользователя."""
     email = models.EmailField('Email', max_length=254, unique=True)
-    username = models.CharField('Логин', max_length=150, unique=True)
-    first_name = models.CharField('Имя', max_length=150)
-    last_name = models.CharField('Фамилия', max_length=150)
-    password = models.CharField('Пароль', max_length=150)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        ordering = ('-id',)
+        ordering = ('username',)
 
     def __str__(self):
         return self.username
@@ -23,16 +22,16 @@ class Subscription(models.Model):
     """Модель подписчика."""
     user = models.ForeignKey(
         User,
-        verbose_name='Подписчик',
+        verbose_name='Пользователь',
         on_delete=models.CASCADE,
-        related_name='follower'
+        related_name='follower',
     )
 
     author = models.ForeignKey(
         User,
         verbose_name='Автор',
         on_delete=models.CASCADE,
-        related_name='following'
+        related_name='following',
     )
 
     class Meta:
@@ -41,7 +40,7 @@ class Subscription(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'author'],
-                name='unique_author_user'
+                name='unique_subscribe'
             )
         ]
 
