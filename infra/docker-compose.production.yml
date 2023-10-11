@@ -7,6 +7,7 @@ volumes:
 
 services:
   db:
+    container_name: db
     image: postgres:13.0-alpine
     volumes:
       - pg_data:/var/lib/postgresql/data/
@@ -14,6 +15,7 @@ services:
       - ./.env
   
   backend:
+    container_name: backend
     image: dron71/foodgram_backend:v9.2
     restart: always
     volumes:
@@ -25,6 +27,7 @@ services:
       - ./.env
   
   frontend:
+    container_name: frontend
     image: dron71/foodgram_frontend:v9.2
     volumes:
       - ../frontend/:/app/result_build/
@@ -33,6 +36,7 @@ services:
       - db
 
   nginx:
+    container_name: nginx
     image: nginx:1.21.3-alpine
     ports:
       - "80:80"

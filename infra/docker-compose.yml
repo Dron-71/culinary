@@ -8,6 +8,7 @@ volumes:
 
 services:
   db:
+    container_name: db
     image: postgres:13.0-alpine
     volumes:
       - pg_data:/var/lib/postgresql/data/
@@ -16,6 +17,7 @@ services:
     restart: always
 
   backend:
+    container_name: backend
     build:
       context: ../backend
       dockerfile: Dockerfile
@@ -30,6 +32,7 @@ services:
       - ./.env
 
   frontend:
+    container_name: frontend
     build:
       context: ../frontend
       dockerfile: Dockerfile
@@ -37,6 +40,7 @@ services:
       - ../frontend/:/app/result_build/
 
   nginx:
+    container_name: nginx
     image: nginx:1.21.3-alpine
     ports:
       - "80:80"
