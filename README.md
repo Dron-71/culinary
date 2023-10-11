@@ -147,6 +147,9 @@ sudo docker compose -f docker-compose.production.yml exec backend python manage.
 
 ## Админ:
 
+```
 Email: 1@yandex.ru
 Password: admin
+```
+
 Сайт доступен по IP: http://51.250.98.200
