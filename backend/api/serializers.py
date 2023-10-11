@@ -1,33 +1,19 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from djoser.serializers import UserCreateSerializer, UserSerializer
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import AmountIngredientRecipe, Ingredient, Recipe, Tag
 from rest_framework import serializers, status
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import IntegerField, SerializerMethodField
 from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer
 
+from recipes.models import AmountIngredientRecipe, Ingredient, Recipe, Tag
 from users.models import Subscription
 
 User = get_user_model()
 
 
-class CustomUserSerializer(UserCreateSerializer):
-    """Создание пользователя."""
-    class Meta:
-        model = User
-        fields = (
-            'email',
-            'username',
-            'first_name',
-            'last_name',
-            'password'
-        )
-
-
-class CurrentUserSerializer(UserSerializer):
+class CurrentUserSerializer(ModelSerializer):
     """Отображение пользователя."""
     is_subscribed = SerializerMethodField(read_only=True)
 
@@ -44,10 +30,10 @@ class CurrentUserSerializer(UserSerializer):
 
     def get_is_subscribed(self, obj):
         """Отображение - подписан ли пользователь на автора."""
-        user = self.context.get('request').user
-        if user.is_anonymous or (user == obj):
-            return False
-        return Subscription.objects.filter(user=user, author=obj).exists()
+        request = self.context.get('request')
+        return (request.user.is_authenticated
+                and Subscription.objects.filter(
+                    user=request.user, author=obj).exists())
 
 
 class SubscriptionsGetSerializer(CurrentUserSerializer):
@@ -201,22 +187,28 @@ class RecipePostSerializer(ModelSerializer):
     def validate_tags(self, tags):
         if not tags:
             raise ValidationError(
-                {'errors': 'В рецепте должен быть указан хотябы 1 тэг.'})
+                {'tags': 'В рецепте должен быть указан хотябы 1 тэг.'})
         return tags
 
     def validate_ingredients(self, ingredients):
         if not ingredients:
             raise ValidationError(
-                {'errors': 'Рецепт должен сосотоять минимум из 1 ингридиента.'}
+                {'ingredients':
+                    'Рецепт должен сосотоять минимум из 1 ингридиента.'}
             )
         ingredients_list = []
         for items in ingredients:
             ingredient = get_object_or_404(Ingredient, id=items['id'])
             if ingredient in ingredients_list:
                 raise ValidationError(
-                    f'Ингредиент {ingredient} уже есть в рецепте.'
+                    {'ingredients':
+                        f'Ингредиент {ingredient} уже есть в рецепте.'}
                 )
             ingredients_list.append(ingredient)
+            if int(items['amount']) <= 0:
+                raise ValidationError(
+                    {'amount': 'Укажите правильное кол-во ингридиентов.'}
+                )
         return ingredients
 
     def validate_cooking_time(self, cooking_time):
@@ -224,7 +216,8 @@ class RecipePostSerializer(ModelSerializer):
             raise ValidationError({'errors': 'Укажите время больше нуля.'})
         return cooking_time
 
-    def create_ingredients(self, ingredients, recipe):
+    @staticmethod
+    def create_ingredients(ingredients, recipe):
         for ingredient in ingredients:
             AmountIngredientRecipe.objects.create(
                 recipe=recipe,

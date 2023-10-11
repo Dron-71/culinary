@@ -1,12 +1,12 @@
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserAdmin as UA
 
 from .models import Subscription, User
 
 
 @admin.register(User)
-class UserAdmin(UserAdmin):
+class UserAdmin(UA):
     """Отображение в админ зоне пользователя."""
     list_display = ('username', 'email', 'first_name', 'last_name')
     search_fields = ('email', 'username', 'first_name', 'last_name')

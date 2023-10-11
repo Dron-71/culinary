@@ -8,6 +8,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django')
+# SECRET_KEY = 'django-insecure-(c3w)wfrx6po_ilkxeg9p4%sur2*238t5%mmx0q#&-ao&dnx+%'
 
 DEBUG = os.getenv('DEBUG') == 'True'
 
@@ -59,6 +60,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 DATABASES = {
     'default': {
@@ -121,13 +128,12 @@ REST_FRAMEWORK = {
 }
 
 DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'HIDE_USER': 'True',
     'SERIALIZERS': {
-        'user': 'api.serializers.CurrentUserSerializer',
-        'user_create': 'api.serializers.CustomUserSerializer',
         'current_user': 'api.serializers.CurrentUserSerializer',
     },
     'PERMISSIONS': {
-        'user_list': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
         'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
     },
     'HIDE_USERS': False,
