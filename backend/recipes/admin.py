@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.contrib import admin
+from django.core.exceptions import ValidationError
+from django.forms.models import BaseInlineFormSet
 
 from .models import (AmountIngredientRecipe, Favorite, Ingredient, Recipe,
                      ShoppingCart, Tag)
@@ -20,10 +22,25 @@ class IngredientAdmin(admin.ModelAdmin):
     empty_value_display = settings.EMPTY_VALUE
 
 
+class ShowIngredientRecipeFormSet(BaseInlineFormSet):
+    """Проверка наличия ингридиентов в рецепте."""
+
+    def clean(self):
+        super().clean()
+        has_ingredient = False
+        for form in self.forms:
+            if not form.cleaned_data.get('DELETE'):
+                has_ingredient = True
+        if not has_ingredient:
+            raise ValidationError(
+                'В рецепте должен быть хотя бы один ингредиент')
+
+
 class ShowIngredientRecipe(admin.TabularInline):
     model = AmountIngredientRecipe
-    extra = 2
+    extra = 0
     min_num = 1
+    formset = ShowIngredientRecipeFormSet
 
 
 @admin.register(Recipe)
