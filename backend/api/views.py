@@ -172,7 +172,7 @@ class RecipeViewSet(ModelViewSet):
             recipe__shopping_cart__user=request.user
         ).values(
             'ingredient__name', 'ingredient__measurement_unit'
-        ).annotate(amount=Sum('amount'))
+        ).order_by('ingredient__name').annotate(amount=Sum('amount'))
 
         shopping_list = (
             f'Список покупок для: {request.user.get_full_name()}\n\n'

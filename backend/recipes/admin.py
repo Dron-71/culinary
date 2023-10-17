@@ -23,6 +23,7 @@ class IngredientAdmin(admin.ModelAdmin):
 class ShowIngredientRecipe(admin.TabularInline):
     model = AmountIngredientRecipe
     extra = 2
+    min_num = 1
 
 
 @admin.register(Recipe)

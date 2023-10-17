@@ -163,6 +163,20 @@ class RecipeIngredientPostSerializer(ModelSerializer):
         fields = 'id', 'amount'
 
 
+def validate(self, value):
+    if not value:
+        raise ValidationError(
+            {'ingredients':
+             'Рецепт должен сосотоять минимум из 1 ингридиента.'}
+        )
+    for i in value:
+        if i['amount'] <= 0:
+            raise ValidationError(
+                {'amount': 'Укажите правильное кол-во ингридиентов.'}
+            )
+    return value
+
+
 class RecipePostSerializer(ModelSerializer):
     """Отображение рецепта при создании, изменении и удалении."""
     tags = PrimaryKeyRelatedField(queryset=Tag.objects.all(),

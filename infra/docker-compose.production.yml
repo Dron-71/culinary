@@ -7,15 +7,13 @@ volumes:
 
 services:
   db:
-    container_name: db
     image: postgres:13.0-alpine
     volumes:
       - pg_data:/var/lib/postgresql/data/
     env_file:
-      - ./.env
-  
+      - .env
+
   backend:
-    container_name: backend
     image: dron71/foodgram_backend:v9.2
     restart: always
     volumes:
@@ -24,33 +22,27 @@ services:
     depends_on:
       - db
     env_file:
-      - ./.env
-  
+      - .env
+
   frontend:
-    container_name: frontend
     image: dron71/foodgram_frontend:v9.2
     volumes:
-      - ../frontend/:/app/result_build/
-      # - ./frontend/:/app/result_build/ - для удаленного сервера
+      - ./frontend/:/app/result_build/
     depends_on:
       - db
 
   nginx:
-    container_name: nginx
     image: nginx:1.21.3-alpine
     ports:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ../frontend/build:/usr/share/nginx/html/
-      - ../docs/:/usr/share/nginx/html/api/docs/
-      # - ./frontend/build:/usr/share/nginx/html/ - для удаленного сервера
-      # - ./docs/:/usr/share/nginx/html/api/docs/ - для удаленного сервера
+      - ./frontend/build:/usr/share/nginx/html/
+      - ./docs/:/usr/share/nginx/html/api/docs/
       - static_value:/var/html/static/
       - media_value:/var/html/media/
     env_file:
-      - ./.env
+      - .env
     depends_on:
       - backend
     restart: unless-stopped
-

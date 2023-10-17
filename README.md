@@ -65,7 +65,7 @@ cd infra && touch .env
 * контейнер веб-сервера nginx
 
 ```
-cd infra docker-compose up -d
+cd infra && docker-compose up -d
 ```
 
 - Создание и применение миграций:
@@ -153,3 +153,5 @@ Password: admin
 ```
 
 Сайт доступен по IP: http://51.250.98.200
+
+.
