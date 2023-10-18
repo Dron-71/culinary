@@ -1,106 +1,97 @@
-# Foodgram - «Продуктовый помощник»
+[![Python](https://img.shields.io/badge/-Python-464646?style=flat-square&logo=Python)](https://www.python.org/)
+[![Django](https://img.shields.io/badge/-Django-464646?style=flat-square&logo=Django)](https://www.djangoproject.com/)
+[![Django REST Framework](https://img.shields.io/badge/-Django%20REST%20Framework-464646?style=flat-square&logo=Django%20REST%20Framework)](https://www.django-rest-framework.org/)
+[![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-464646?style=flat-square&logo=PostgreSQL)](https://www.postgresql.org/)
+[![Nginx](https://img.shields.io/badge/-NGINX-464646?style=flat-square&logo=NGINX)](https://nginx.org/ru/)
+[![gunicorn](https://img.shields.io/badge/-gunicorn-464646?style=flat-square&logo=gunicorn)](https://gunicorn.org/)
+[![docker](https://img.shields.io/badge/-Docker-464646?style=flat-square&logo=docker)](https://www.docker.com/)
+[![GitHub%20Actions](https://img.shields.io/badge/-GitHub%20Actions-464646?style=flat-square&logo=GitHub%20actions)](https://github.com/features/actions)
+[![Yandex.Cloud](https://img.shields.io/badge/-Yandex.Cloud-464646?style=flat-square&logo=Yandex.Cloud)](https://cloud.ya
+
+# Проект «Продуктовый помощник»
 
 Cервис, где пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
 
-### Запуск проекта
+---
 
-- Клонируем репозиторий:
+## Ниже представлены доступные адреса проекта:
 
-```
-git clone git@github.com:Dron-71/foodgram-project-react.git
-```
+- http://51.250.98.200 - доступ по IP (временно)
+- http://localhost/ - главная страница сайта;
+- http://localhost/admin/ - админ панель;
+- http://localhost/api/ - API проекта
+- http://localhost/api/docs/redoc.html - документация к API
 
-- Установка и развертывание виртуального окружения:
+### Для доступа в админ-зону:
 
-```
-python3 -m venv venv && source venv/bin/activate
-```
+- Email: `1@yandex.ru`
+- Password: `admin`
 
-- Обновляем менеджер пакетов pip -> Устанавливает зависимости -> Устанавливаем Django:
+---
 
-```
-python3 -m pip install --upgrade pip && cd backend/ && pip install -r requirements.txt
-```
+Скриншот главной страницы сайта
+![Скриншот главной страницы сайта](https://github.com/Dron-71/foodgram-project-react/blob/master/foodgram.png)
 
-- Создание и применение миграций:
+---
 
-```
-python3 manage.py makemigrations
-```
+### Для запуска приложения в контейнерах:
 
-```
-python3 manage.py migrate
-```
+- Установите Docker
+- Клонируйте репозиторий
+  ```
+  git clone git@github.com:Dron-71/foodgram-project-react.git
+  ```
+- Создайте и заполните файл .env (в корне проекта)
 
-- Заполнение базы данных:
+---
 
-```
-python3 manage.py import_ingredients
-```
+### Заполнение .env файла:
 
-- Создаем суперпользователя:
+- POSTGRES_USER=django_user
+- POSTGRES_PASSWORD=mysecretpassword
+- POSTGRES_DB=django
+- DB_HOST=db
+- DB_PORT=5432
+- ALLOWED_HOSTS=,51.250.98.200,127.0.0.1,localhost
+- SECRET_KEY=django_secret_key
+- DEBUG=True
 
-```
-python3 manage.py createsuperuser
-```
+---
 
-- Запускать сервер разработки:
+- Запустите docker-compose:
+  ```
+  docker-compose up -d --build
+  ```
+- Выполните миграции:
+  ```
+  docker-compose exec backend python manage.py migrate
+  ```
+- Для сбора статики воспользуйтесь командами:
+  ```
+  docker-compose exec backend python manage.py collectstatic
+  ```
+  ```
+  docker compose exec backend cp -r /app/collected_static/. /backend_static/static/
+  ```
+- Для загрузки базы данных ингрединтов:
+  ```
+  docker-compose exec backend python manage.py import_ingredients
+  ```
+- Для загрузки базы данных тэгов:
+  ```
+  docker-compose exec backend python manage.py import_tags
+  ```
+- Для создания или загрузки суперпользователя:
+  ```
+  docker-compose exec backend python manage.py createsuperuser
+  ```
+  ```
+  docker-compose exec backend python manage.py import_createsuperuser
+  ```
 
-```
-python3 manage.py runserver
-```
+---
 
-### Установка и запуск проекта на локальном компьютере
-
-Перейти в директорию /infra и создать файл .env:
-
-```
-cd infra && touch .env
-```
-
-- Сборка контейнеров:
-
-* контейнер базы данных db
-* контейнер приложения backend
-* контейнер веб-сервера nginx
-
-```
-cd infra && docker-compose up -d
-```
-
-- Создание и применение миграций:
-
-```
-docker-compose exec backend python manage.py makemigrations
-```
-
-```
-docker-compose exec backend python manage.py migrate
-```
-
-- Собрать статику:
-
-```
-docker-compose exec backend python manage.py collectstatic --no-input
-```
-
-- Заполнение базы данных:
-
-```
-docker-compose exec backend python manage.py import_ingredients
-```
-
-```
-sudo docker-compose exec backend python manage.py import_tags
-```
-
-- Создаем суперпользователя:
-
-```
-sudo docker-compose exec backend python manage.py import_tags createsuperuser
-```
-
-### Запуск проекта на удаленном сервере
+## Запуск проекта на удаленном сервере
 
 - Выполните вход на свой удаленный сервер
 
@@ -114,7 +105,7 @@ sudo sh ./get-docker.sh
 sudo apt-get install docker-compose-plugin
 ```
 
-Создайте на сервере пустой файл docker-compose.production.yml и с помощью редактора nano добавьте в него содержимое из локального docker-compose.production.yml.
+Создайте на сервере пустой файл docker-compose.production.yml, и с помощью редактора nano добавьте в него содержимое из локального docker-compose.production.yml.
 Скопируйте файл .env на сервер, в директорию foodgram/.
 
 ```
@@ -129,29 +120,30 @@ touch docker-compose.production.yml && nano docker-compose.production.yml
 touch .env && nano .env
 ```
 
-```
-touch nginx.conf && nano nginx.conf
-```
+---
 
 ## Запускаем контейнеры
 
-Выполните миграции, соберите статические файлы бэкенда
+После запуска, выполните миграции и соберите статические файлы бэкенда
 
 ```
 sudo docker compose -f docker-compose.production.yml up -d
 sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
 sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
+sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
 sudo docker compose -f docker-compose.production.yml exec backend python manage.py import_ingredients
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py import_tags
 sudo docker compose -f docker-compose.production.yml exec backend python manage.py createsuperuser
 ```
 
-## Админ:
+---
 
-```
-Email: 1@yandex.ru
-Password: admin
-```
+### Автор:
 
-Сайт доступен по IP: http://51.250.98.200
+[Андрей Л.](https://github.com/Dron-71?tab=repositories) 2023
 
-.
+---
+
+### Визуальное представление:
+
+![Визуальное представление](https://github.com/Dron-71/foodgram-project-react/blob/master/foodgram.gif)
