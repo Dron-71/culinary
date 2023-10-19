@@ -8,19 +8,28 @@
 [![GitHub%20Actions](https://img.shields.io/badge/-GitHub%20Actions-464646?style=flat-square&logo=GitHub%20actions)](https://github.com/features/actions)
 [![Yandex.Cloud](https://img.shields.io/badge/-Yandex.Cloud-464646?style=flat-square&logo=Yandex.Cloud)](https://cloud.ya
 
-# Проект «Продуктовый помощник»
+# Очередной проект в моём портфолио в рамках учёбы в @yandex.practicum — «Фудграм».
 
-Cервис, где пользователи могут публиковать рецепты, подписываться на публикации других пользователей, добавлять понравившиеся рецепты в список «Избранное», а перед походом в магазин скачивать сводный список продуктов, необходимых для приготовления одного или нескольких выбранных блюд.
+«Фудграм» — это сайт, на котором можно публиковать собственные рецепты, добавлять чужие рецепты в избранное, подписываться на других авторов и создавать список покупок для заданных блюд.
+Вот, что было сделано в ходе работы над проектом:
+
+- настроено взаимодействие Python-приложения с внешними API-сервисами;
+- создан собственный API-сервис на базе проекта Django;
+- подключено SPA к бэкенду на Django через API;
+- созданы образы и запущены контейнеры Docker;
+- созданы, развёрнуты и запущены на сервере мультиконтейнерные приложения;
+- закреплены на практике основы DevOps, включая CI&CD.
+  Инструменты и стек: #python #JSON #YAML #Django #React #Telegram #API #Docker #Nginx #PostgreSQL #Gunicorn #JWT #Postman
 
 ---
 
 ## Ниже представлены доступные адреса проекта:
 
 - http://51.250.98.200 - доступ по IP (временно)
-- http://localhost/ - главная страница сайта;
-- http://localhost/admin/ - админ панель;
-- http://localhost/api/ - API проекта
-- http://localhost/api/docs/redoc.html - документация к API
+- http://localhost:8000/ - главная страница сайта;
+- http://localhost:8000/admin/ - админ панель;
+- http://localhost:8000/api/ - API проекта
+- http://localhost:8000/api/docs/redoc.html - документация к API
 
 ### Для доступа в админ-зону:
 
@@ -77,6 +86,10 @@ Cервис, где пользователи могут публиковать �
   ```
   docker-compose exec backend python manage.py import_ingredients
   ```
+- Для загрузки базы данных тэгов:
+  ```
+  docker-compose exec backend python manage.py import_tags
+  ```
 - Для создания или загрузки суперпользователя:
   ```
   docker-compose exec backend python manage.py createsuperuser
@@ -128,7 +141,10 @@ sudo docker compose -f docker-compose.production.yml exec backend python manage.
 sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic --no-input
 sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
 sudo docker compose -f docker-compose.production.yml exec backend python manage.py import_ingredients
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py import_tags
 sudo docker compose -f docker-compose.production.yml exec backend python manage.py createsuperuser
+или
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py import_createsuperuser
 ```
 
 ---
