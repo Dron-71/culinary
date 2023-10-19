@@ -94,6 +94,7 @@
   ```
   docker-compose exec backend python manage.py createsuperuser
   ```
+- или
   ```
   docker-compose exec backend python manage.py import_createsuperuser
   ```
