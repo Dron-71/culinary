@@ -6,11 +6,10 @@
 [![gunicorn](https://img.shields.io/badge/-gunicorn-464646?style=flat-square&logo=gunicorn)](https://gunicorn.org/)
 [![docker](https://img.shields.io/badge/-Docker-464646?style=flat-square&logo=docker)](https://www.docker.com/)
 [![GitHub%20Actions](https://img.shields.io/badge/-GitHub%20Actions-464646?style=flat-square&logo=GitHub%20actions)](https://github.com/features/actions)
-[![Yandex.Cloud](https://img.shields.io/badge/-Yandex.Cloud-464646?style=flat-square&logo=Yandex.Cloud)](https://cloud.ya)
 
-# Очередной проект в моём портфолио в рамках учёбы в @yandex.practicum — «Фудграм».
+# Очередной проект в моём портфолио — «Кулинар».
 
-«Фудграм» — это сайт, на котором можно публиковать собственные рецепты, добавлять чужие рецепты в избранное, подписываться на других авторов и создавать список покупок для заданных блюд.
+«Кулинар» — это сайт, на котором можно публиковать собственные рецепты, добавлять чужие рецепты в избранное, подписываться на других авторов и создавать список покупок для заданных блюд.
 Вот, что было сделано в ходе работы над проектом:
 
 - настроено взаимодействие Python-приложения с внешними API-сервисами;
@@ -19,7 +18,8 @@
 - созданы образы и запущены контейнеры Docker;
 - созданы, развёрнуты и запущены на сервере мультиконтейнерные приложения;
 - закреплены на практике основы DevOps, включая CI&CD.
-  Инструменты и стек: #python #JSON #YAML #Django #React #Telegram #API #Docker #Nginx #PostgreSQL #Gunicorn #JWT #Postman
+
+Инструменты и стек: #python #JSON #YAML #Django #React #Telegram #API #Docker #Nginx #PostgreSQL #Gunicorn #JWT #Postman
 
 ---
 
